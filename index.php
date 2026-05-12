@@ -1,13 +1,18 @@
 <?php
-$token = "8611488339:AAF2ONvRUGZLBh2hSa3lxrAuK2Ob10SHTu4";
-$chat_id = "1135336311";
+// කෝඩ් එක ඇතුළේ කෙලින්ම ලියන්නේ නැතුව සර්වර් එකේ Environment එකෙන් මේවා ගන්නවා
+$token = getenv('TELEGRAM_TOKEN'); 
+$chat_id = getenv('TELEGRAM_CHAT_ID');
 $user_ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
-$msg = "👀 Someone visited your AWS website! \nIP Address: " . $user_ip;
-$url = "https://api.telegram.org/bot" . $token . "/sendMessage?chat_id=" . $chat_id . "&text=" . urlencode($msg);
+// බොට්ස්ලා එන එක චෙක් කරනවා (Spam අඩු කරන්න)
+$is_bot = preg_match('/bot|crawl|slurp|spider|mediapartners/i', $user_agent);
 
-// Send message to Telegram (as soon as the website loads)
-@file_get_contents($url);
+if ($token && $chat_id && !$is_bot) {
+    $msg = "👀 New Visitor on AWS! \nIP: " . $user_ip;
+    $url = "https://api.telegram.org/bot" . $token . "/sendMessage?chat_id=" . $chat_id . "&text=" . urlencode($msg);
+    @file_get_contents($url);
+}
 ?>
 
 <!DOCTYPE html>
