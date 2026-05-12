@@ -1,2 +1,2 @@
-FROM nginx:latest
-COPY index.html /usr/share/nginx/html/
+FROM php:apache
+COPY index.php /var/www/html/
